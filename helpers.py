@@ -1,0 +1,111 @@
+import re
+from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
+import time
+
+driver = None
+elements = {}
+variables = {}
+
+def checkIndex(element, index):
+    return elements[element] if index is None else elements[element][int(index)]
+
+def str2bool(v):
+  return v.lower() in ("yes", "true", "t", "1")
+
+def sleep(wait):
+    time.sleep(int(wait))
+
+def SET(typeVar, **kwargs):
+    global variables
+    for k, v in kwargs.items():
+        if typeVar == 'float':
+            variables[k] = float(v)
+        elif typeVar == 'str':
+            variables[k] = str(v)
+        elif typeVar == 'int':
+            variables[k] = int(v)
+        else:
+            raise AttributeError ("Given type is unsupported") 
+    print(variables)
+
+def GET(variable):
+    return variables[variable]
+
+def EVALUATE(evaluation):
+    print(evaluation)
+    #evaluation = evaluation.replace(' ', '')
+    #evaluation = evaluation.replace('get>', 'variables[')
+    arreval = re.split('(\(|\)|\+|\-|\*|\/)', evaluation)
+    for i, a in enumerate(arreval):
+        print(arreval[i])
+        arreval[i] = str(arreval[i]).replace('get>', "variables['")
+        if arreval[i].startswith('variables'):
+            arreval[i] = str(arreval[i])+"']"
+            arreval[i] = eval(arreval[i], globals(), locals())
+        for i, a in enumerate(arreval):
+            try:
+                arreval[i] = int(arreval[i])
+            except:
+                arreval[i] = arreval[i]
+    return eval(''.join([str(a) for a in arreval]))
+
+def start(browser, path='/'):
+    global driver
+    if browser.upper() == 'CHROME':
+        driver = webdriver.Chrome(path)
+    elif browser.upper() == 'FIREFOX':
+        driver = webdriver.Firefox(path)
+    elif browser.upper() == 'EDGE':
+        driver = webdriver.Edge(path)
+    elif browser.upper() == 'SAFARI':
+        driver = webdriver.Safari(path)
+
+def get_element_by_name(name, index):
+    global elements
+    elements[index] = driver.find_elements_by_name(name)
+    if isinstance(elements[index], list) and len(elements[index]) == 1:
+        elements[index] = elements[index][0]
+
+def action_series(*text_args, enter="True"):
+    actions = ActionChains(driver)
+    actions.send_keys(*text_args)
+    if str2bool(enter):
+        actions.send_keys(Keys.ENTER)
+    actions.perform()
+
+def get_element_by_id(elem_id, index):
+    global elements
+    elements[index] = driver.find_elements_by_id(elem_id)
+    if isinstance(elements[index], list) and len(elements[index]) == 1:
+        elements[index] = elements[index][0]
+
+def get_element_by_xpath(xpath, index):
+    global elements
+    elements[index] = driver.find_elements_by_xpath(xpath)
+    if isinstance(elements[index], list) and len(elements[index]) == 1:
+        elements[index] = elements[index][0]
+
+def clear(element, index):
+    checkIndex(element, index).clear()
+
+def write(element, words, index=None, clear="True", enter="True"):
+    if str2bool(clear):
+        checkIndex(element, index).clear()
+    checkIndex(element, index).send_keys(words)
+    if str2bool(enter):
+        checkIndex(element, index).send_keys(Keys.RETURN)
+
+def click(element, index=None):
+    checkIndex(element, index).click()
+
+def visit(*args):
+    driver.get(*args)
+
+def close():
+    driver.close()
+
+exec((open("extensions.py").read()), globals(), locals())
