@@ -54,7 +54,7 @@ The above as you might have guessed asks system to wait for 10 seconds before do
 ## Comments
 ```# Hey, this part finds search results```
 
-Some times you might want to write some arbitrary text for someone reading your code and to do so you can do what's done above and start you line by `#` symbol.
+Some times you might want to write some arbitrary text for someone reading your code and to do so you can do what's done above and start your line by `#` symbol.
 
 ## Indexed elements
 If we ask for an element where multiple search results are found this stores them in a list by index starting from 0 so that you can call it with index whenever required. What follows is an example for you to find search results through xpath and store all of them in a list.
