@@ -45,7 +45,7 @@ You might write on an element by first calling the name you used to store the fo
 The write method presses enters unless you pass an optional argument `enter->false` in the same line.
 
 ## Wait
-In the process of testing you may want to wait for certain things to happen, even though going to website by either clicking or visiting though the methods alredy does so but, you now can wait by sleeping, meaning using sleep method.\n
+In the process of testing you may want to wait for certain things to happen, even though going to website by either clicking or visiting through the methods alredy does so but, you now can wait by sleeping, meaning using sleep method.
 
 ```sleep => 10```
 
@@ -101,13 +101,13 @@ sleep => wait -> EVALUATE => ((get > wait + 1 - get > wait)*2)/2
 thanks, for reading through and we'll hope you'll continue to use BA-Test.
 
 # Development
-Wait, were you a developer looking for a test writing DSL for your testers or business people to use and for you to extend we got you. This language has a file named `extensions.py` where you can write methods and the will be directly accessible in this language and what follows is a plethora of things you would need to know before you can start extending this DSL to meet your needs.
+Wait, were you a developer looking for a test writing DSL for your testers or business people to use and for you to extend we got you. This language has a file named `extensions.py` where you can write methods and they will be directly accessible in this language and what follows is a plethora of things you would need to know before you can start extending this DSL to meet your needs.
 
 ## Global variables
 There are a few global variables used as memory for BA-Test, the first one is **driver** which is the driver we want to use for browser automation, the second one is **elements** which ofcourse is the memory used to store elements, and the last one is **variables** which is the memory we use to store variables being set by users.
 
 ## findElement
-You would have to use this function to find an element and whenever you'd have to find an element from global element you must have an element and an index argument which by default should be `None`, and what follows is an example extension of this file where I make a another function to click a button.
+You would have to use this function to find an element and whenever you'd have to find an element from global element you must have an element and an index argument which by default should be `None`, and what follows is an example extension of this file where I make another function to click a button.
 ```
 def testClicker(element, index=None):
   findElement(element, index).click()
@@ -121,13 +121,13 @@ def find_element_by_class(elem_class, index):
   listOrNot(index)
 ```
 ## str2bool
-Everything given by the language is an string with certain exceptions specifically variables inside global variable memory and what follows is an example of where it might be used
+Everything given by the language is a string with certain exceptions specifically variables inside global variable memory and what follows is an example of where it might be used
 ```
 if str2bool(enter):
   print("we are going to press enter")
 ```
 # What's to come
-Some of the examples such as the "class" one will be implemented in core language pretty soon, more optimizations will be done for this language and more functions for developers' convenience will also be avalible.
+Some of the examples such as the "class" one will be implemented in the core language pretty soon, more optimizations will be done for this language and more functions for developers' convenience will also be avalible.
 
 # Thanks
 This time for real, thanks for reading through and we hope to thank you for using this language for test writing purposes.
