@@ -27,7 +27,7 @@ So, yeah you say start, then assign arguments using this sign `=>` and the only 
 ## Visiting a website
 ```visit => https://www.google.com/```
 
-Yep, it's that simple you just go ahead and say visit, then assign arguments using this sign `=>` and the only required argument here is the URL of the website you want to visit but make sure to add `http://www.`, because BA-Test at least for now doesn't recognize URLs without that doesn't have this beginning.
+Yep, it's that simple you just go ahead and say visit, then assign arguments using this sign `=>` and the only required argument here is the URL of the website you want to visit but make sure to add `http://www.`, because BA-Test at least for now doesn't recognize URLs without this beginning.
 
 ## Selecting an element
 Similar to what we had done above we will just
