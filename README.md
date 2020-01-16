@@ -34,7 +34,7 @@ Similar to what we had done above we will just
 
 ```get_element_by_name => q, google_search```
 
-but in this particular instance we assign two arguments seprated by `,` and the first argument asks for the name that you want it to search for, in a page while the second one asks for the name that you want to store it with so that you can use it later in rest of you test.
+but in this particular instance we assign two arguments seprated by `,` and the first argument asks for the name that you want it to search for, in a page while the second one asks for the name that you want to store it with so that you can use it later in rest of your test.
 
 Other methods can be used in a similar manner, by just providing name, id or xpath respectively.
 
