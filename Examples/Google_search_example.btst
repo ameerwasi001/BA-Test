@@ -1,0 +1,22 @@
+# Simpler way
+start => chrome, C:/Browserdriver/chromedriver.exe
+visit => https://www.google.com/
+get_element_by_name => q, search_bar
+write => search_bar, 'PyCon is big'
+get_element_by_xpath => //h3[@class='LC20lb'], results
+click => results, index->1
+sleep => 5
+close
+
+# More showy but harder way
+start => chrome, C:/Browserdriver/chromedriver.exe
+SET => int => wait = 10
+SET => str => website = https://www.google.com/
+SET => str => button = "to Click"
+visit => GET => website
+get_element_by_name => q, GET => button
+write => GET => button, 'PyCon is big'
+get_element_by_xpath => //h3[@class='LC20lb'], results
+click => results, index->1
+sleep => GET => wait
+close
