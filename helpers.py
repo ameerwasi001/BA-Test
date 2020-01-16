@@ -10,8 +10,15 @@ driver = None
 elements = {}
 variables = {}
 
-def checkIndex(element, index):
+def findElement(element, index):
     return elements[element] if index is None else elements[element][int(index)]
+
+def listOrNot(index):
+    global elements
+    if isinstance(elements[index], list) and len(elements[index]) == 1:
+        elements[index] = elements[index][0]
+    elif isinstance(elements[index], list) and len(elements[index]) == 0:
+        raise KeyError ("No element with matching attributes found")
 
 def str2bool(v):
   return v.lower() in ("yes", "true", "t", "1")
@@ -29,7 +36,7 @@ def SET(typeVar, **kwargs):
         elif typeVar == 'int':
             variables[k] = int(v)
         else:
-            raise AttributeError ("Given type is unsupported") 
+            raise AttributeError ("Given type is unsupported")
     print(variables)
 
 def GET(variable):
@@ -67,8 +74,7 @@ def start(browser, path='/'):
 def get_element_by_name(name, index):
     global elements
     elements[index] = driver.find_elements_by_name(name)
-    if isinstance(elements[index], list) and len(elements[index]) == 1:
-        elements[index] = elements[index][0]
+    listOrNot(index)
 
 def action_series(*text_args, enter="True"):
     actions = ActionChains(driver)
@@ -80,27 +86,25 @@ def action_series(*text_args, enter="True"):
 def get_element_by_id(elem_id, index):
     global elements
     elements[index] = driver.find_elements_by_id(elem_id)
-    if isinstance(elements[index], list) and len(elements[index]) == 1:
-        elements[index] = elements[index][0]
+    listOrNot(index)
 
 def get_element_by_xpath(xpath, index):
     global elements
     elements[index] = driver.find_elements_by_xpath(xpath)
-    if isinstance(elements[index], list) and len(elements[index]) == 1:
-        elements[index] = elements[index][0]
+    listOrNot(index)
 
 def clear(element, index):
-    checkIndex(element, index).clear()
+    findElement(element, index).clear()
 
 def write(element, words, index=None, clear="True", enter="True"):
     if str2bool(clear):
-        checkIndex(element, index).clear()
-    checkIndex(element, index).send_keys(words)
+        findElement(element, index).clear()
+    findElement(element, index).send_keys(words)
     if str2bool(enter):
-        checkIndex(element, index).send_keys(Keys.RETURN)
+        findElement(element, index).send_keys(Keys.RETURN)
 
 def click(element, index=None):
-    checkIndex(element, index).click()
+    findElement(element, index).click()
 
 def visit(*args):
     driver.get(*args)
