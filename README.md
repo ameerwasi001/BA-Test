@@ -99,3 +99,32 @@ where `get>` gets the variable and then the next thing is to assign it to a cert
 sleep => wait -> EVALUATE => ((get > wait + 1 - get > wait)*2)/2
 ```
 thanks, for reading through and we'll hope you'll continue to use BA-Test.
+
+# Development
+Wait, were you a developer looking for a test writing DSL for your testers or business people to use and for you to extend we got you. This language has a file named `extensions.py` where you can write methods and the will be directly accessible in this language and what follows is a plethora of things you would need to know before you can start extending this DSL to meet your needs.
+
+## findElement
+You would have to use this function to find an element and whenever you'd have to find an element from global element you must have an element and an index argument which by default should be `None`, and what follows is an example extension of this file where I make a another function to click a button.
+```
+def testClicker(element, index=None):
+  findElement(element, index).click()
+```
+## listOrNot
+This is used to check the given element appropriately and to convert list to an element if nessecary and to raise appropriate errors if required and what follows is an example for a `find_element_by_class` method in extensions.
+```
+def find_element_by_class(elem_class, index):
+  global elements
+  elements[index] = driver.find_elements_by_class_name(elem_class)
+  listOrNot(index)
+```
+## str2bool
+Everything given by the language is an string with certain exceptions specifically variables inside global variable memory and what follows is an example of where it might be used
+```
+if str2bool(enter):
+  print("we are going to press enter")
+```
+# What's to come
+Some of the examples such as the "class" one will be implemented in core language pretty soon, more optimizations will be done for this language and more functions for developers' convenience will also be avalible.
+
+# Thanks
+This time for real, thanks for reading through and we hope to thank you for using this language for test writing purposes.
