@@ -103,6 +103,9 @@ thanks, for reading through and we'll hope you'll continue to use BA-Test.
 # Development
 Wait, were you a developer looking for a test writing DSL for your testers or business people to use and for you to extend we got you. This language has a file named `extensions.py` where you can write methods and the will be directly accessible in this language and what follows is a plethora of things you would need to know before you can start extending this DSL to meet your needs.
 
+## Global variables
+There are a few global variables used as memory for BA-Test, the first one is **driver** which is the driver we want to use for browser automation, the second one is **elements** which ofcourse is the memory used to store elements, and the last one is **variables** which is the memory we use to store variables being set by users.
+
 ## findElement
 You would have to use this function to find an element and whenever you'd have to find an element from global element you must have an element and an index argument which by default should be `None`, and what follows is an example extension of this file where I make a another function to click a button.
 ```
