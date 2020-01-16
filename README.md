@@ -69,3 +69,33 @@ While the first one is quite self explanatory the second one needs an explanatio
 `close`
 
 If you decide to close your window after a certain test is done, then you can use the `close` method with no arguments passed whatsoever.
+
+## Variables
+This language can help you store, read and re-evaluate certain variables namely strings, floats and integers.
+### Setting a variable
+Setting a variable is quite simple, you can just state
+```
+SET => int => wait = 2
+```
+Setting an integer is as simple as that and we can do the same for setting strings and floats.
+### Getting a variable
+Getting a variable is just as simple, you can just state
+```
+GET => wait
+```
+anywhere in the program so you might be thinking about how you can assign a variables value to an argument.
+```
+sleep => GET => wait
+```
+and the same thing can be done with optional arguments.
+
+### Basic math with a variable
+All basic math can be done with variables in BA-Test like this,
+```
+EVALUATE => ((get > wait + 1 - get > wait)*2)/2
+```
+where `get>` gets the variable and then the next thing is to assign it to a certain method like what follows,
+```
+sleep => wait -> EVALUATE => ((get > wait + 1 - get > wait)*2)/2
+```
+thanks, for reading through and we'll hope you'll continue to use BA-Test.
