@@ -8,7 +8,7 @@ It supports every browser that selenium supports meaning Firefox, Chrome, Safari
 There's very little knowledge required beforehand for starting working with this DSL because the only things you need to know are CSS selectors and xpath which is directly accessible in this language but it's totally not for someone who hasn't done any testing before because it has the exact same workflow of selecting elements in a variable and writing or clicking on them.
 
 # Selectors
-There are many methods with which elements can be selected and here are the mthods that are currently supported.
+There are many methods with which elements can be selected and here are the mthods that are currently supported.\n
 ```
 get_element_by_name
 get_element_by_id
