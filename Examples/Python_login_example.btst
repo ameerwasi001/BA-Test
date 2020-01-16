@@ -1,0 +1,31 @@
+# Simple way
+start => chrome, C:/Browserdriver/chromedriver.exe
+visit => https://www.python.org/
+get_element_by_xpath => //p[@class="click-these"]//a[@href="/users/membership/"], index -> button
+click => button
+sleep => 5
+get_element_by_id => id_login, username
+write => username, ameerShah@gmail.com, enter->false
+get_element_by_id => id_password, password
+write => password, helloameer, enter->false
+get_element_by_xpath => //button[@class="primaryAction"], submit
+click => submit
+sleep => 5
+close
+
+# Harder but more showey way
+start => chrome, C:/Browserdriver/chromedriver.exe
+SET => int => wait = 10
+SET => str => button = "to Click"
+visit => https://www.python.org/
+get_element_by_xpath => //p[@class="click-these"]//a[@href="/users/membership/"], index -> GET => button
+click => GET => button
+sleep => GET => wait
+get_element_by_id => id_login, username
+write => username, ameerShah@gmail.com, enter->false
+get_element_by_id => id_password, password
+write => password, helloameer, enter->false
+get_element_by_xpath => //button[@class="primaryAction"], submit
+click => submit
+sleep => GET => wait
+close
