@@ -128,7 +128,7 @@ if str2bool(enter):
   print("we are going to press enter")
 ```
 # What's to come
-Some of the examples such as the "class" one is implemented in the core language pretty soon, more optimizations will be done for this language and more functions for developers' convenience will also be avalible.
+Some of the examples such as the "class" one is implemented in the core language now, more optimizations will be done for this language and more functions for developers' convenience will also be avalible.
 
 # Thanks
 This time for real, thanks for reading through and we hope to thank you for using this language for test writing purposes.
