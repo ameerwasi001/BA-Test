@@ -76,6 +76,11 @@ def get_element_by_name(name, index):
     elements[index] = driver.find_elements_by_name(name)
     listOrNot(index)
 
+def get_element_by_class(class_name, index):
+    global elements
+    elements[index] = driver.find_elements_by_class_name(class_name)
+    listOrNot(index)
+
 def action_series(*text_args, enter="True"):
     actions = ActionChains(driver)
     actions.send_keys(*text_args)
