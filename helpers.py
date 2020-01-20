@@ -98,6 +98,11 @@ def get_element_by_xpath(xpath, index):
     elements[index] = driver.find_elements_by_xpath(xpath)
     listOrNot(index)
 
+def get_element_by_tag(tag, index):
+    global elements
+    elements[index] = find_elements_by_tag_name(tag)
+    listOrNot(index)
+
 def clear(element, index):
     findElement(element, index).clear()
 
