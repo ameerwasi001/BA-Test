@@ -100,7 +100,17 @@ def get_element_by_xpath(xpath, index):
 
 def get_element_by_tag(tag, index):
     global elements
-    elements[index] = find_elements_by_tag_name(tag)
+    elements[index] = driver.find_elements_by_tag_name(tag)
+    listOrNot(index)
+
+def get_element_by_link_text(mode, text, index):
+    global elements
+    if mode.lower() == "absolute":
+        elements[index] = driver.find_elements_by_link_text(text)
+    elif mode.lower() == "partial":
+        elements[index] = driver.find_elements_by_partial_link_text(text)
+    else:
+        raise TypeError (f"undefined type {mode}")
     listOrNot(index)
 
 def clear(element, index):
