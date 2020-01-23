@@ -6,14 +6,18 @@ import importlib
 
 def get_the_getters(given_list, getter='GET'):
     getters = [i for i, x in enumerate(given_list) if x == getter]
+    for g in getters:
+        print('getters: ', given_list[g], g, end=', ')
     if getters != []:
         for getter in getters:
             getter_var = getter+1
             getter_val = given_list[getter_var]
             value = getattr(helpers, given_list[getter])(given_list[getter_var])
+            print('value: ', value)
+            given_list[getter_var] = value
             del given_list[getter]
-            given_list = [value if given == getter_val else given for given in given_list]
-            print(given_list)
+#            given_list = [value if given == getter_val else given for given in given_list]
+#            print('pt', given_list)
             return given_list
     else:
         return given_list
@@ -42,7 +46,6 @@ def get_args(dsl_args, shouldEqualBeSeprated=True, seprationOperator='->'):
             getter = 'EVALUATE'
     
         if str(dsl_arg).__contains__("GET") or str(dsl_arg).__contains__('EVALUATE'):
-            print(dsl_arg)
             k, v = dsl_arg.split(seprationOperator, 1)
             k = remove_space_or_not(k)
             v = remove_space_or_not(v)
@@ -90,6 +93,8 @@ else:
                     parts[index] = remove_space_or_not(part)
             parts = get_the_getters(parts, getter='GET')
             parts = get_the_getters(parts, getter='EVALUATE')
+            parts = [x for x in parts if not x == 'GET']
+            parts = [x for x in parts if not x == 'EVALUATE']
             seprationOperator = '=' if parts[0] == 'SET' else '->'
             args, kwargs = get_args(parts[1:], shouldEqualBeSeprated=True, seprationOperator=seprationOperator)
 
