@@ -98,6 +98,11 @@ def get_element_by_xpath(xpath, index):
     elements[index] = driver.find_elements_by_xpath(xpath)
     listOrNot(index)
 
+def get_element_by_css_selector(selector, index):
+    global elements
+    elements[index] = driver.find_element_by_css_selector(selector)
+    listOrNot(index)
+
 def get_element_by_tag(tag, index):
     global elements
     elements[index] = driver.find_elements_by_tag_name(tag)
