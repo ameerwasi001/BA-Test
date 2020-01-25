@@ -14,6 +14,9 @@ get_element_by_name
 get_element_by_id
 get_element_by_xpath
 get_element_by_class
+get_element_by_tag
+get_element_by_link_text
+get_element_by_css_selector
 ```
 In future there are plans for more selectors that just use xpath under the hood.
 
