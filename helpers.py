@@ -7,6 +7,7 @@ from selenium.webdriver.common.keys import Keys
 import time
 
 driver = None
+ActionChain = None
 elements = {}
 variables = {}
 
@@ -81,12 +82,18 @@ def get_element_by_class(class_name, index):
     elements[index] = driver.find_elements_by_class_name(class_name)
     listOrNot(index)
 
-def action_series(*text_args, enter="True"):
-    actions = ActionChains(driver)
-    actions.send_keys(*text_args)
+def action_initialize():
+    global ActionChain
+    ActionChain = ActionChains(driver)
+
+def text_action(*text_args, enter="True"):
+    ActionChain.send_keys(*text_args)
     if str2bool(enter):
-        actions.send_keys(Keys.ENTER)
-    actions.perform()
+        ActionChain.send_keys(Keys.ENTER)
+
+def action_perform():
+    global ActionChain
+    ActionChain.perform()
 
 def get_element_by_id(elem_id, index):
     global elements
