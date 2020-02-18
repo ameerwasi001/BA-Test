@@ -68,7 +68,7 @@ close
 ```
 
 #### Perform
-Perhaps the simplest to use yet the most important in the entire action chain section is this one because it makes you be able to perform actions when youare done linking them up and it's used something like what follows
+Perhaps the simplest to use yet the most important in the entire action chain section is this one because it makes you be able to perform actions when you are done linking them up and it's used something like what follows
 
 ```action_perform```
 
