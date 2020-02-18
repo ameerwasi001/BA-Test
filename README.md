@@ -48,6 +48,30 @@ Other methods can be used in a similar manner, by just providing name, id or xpa
 You might write on an element by first calling the name you used to store the found element which may or may not be more than one which in our case it's not so we don't need to pass any optional arguments so, the next argument here is and string because it contains spaces but if it didn't then we could have just typed `PyCon is big` instead of `'PyCon is big'` which requires either double or single quotes.
 The write method presses enters unless you pass an optional argument `enter->false` in the same line.
 
+## Action Chains
+### Action initialization
+Action chains need to be intialized before using and it can be done by simply saying something along the lines of what follows
+
+```action_initialize```
+
+### Action Methods
+#### Text Action
+This function command named ```text_action``` sends some text over to the currently focused field, it takes two arguments but one of them is required and it is, ```text_args``` and it as you have probably guessed takes text arguments that you want to be typed and the second one which is optional is named enter and is by default true and if you don't want to hit enter after sending the text then you should make it False. Some Sample code it's usage is what follows.
+
+```
+visit => https://www.google.com/
+action_initialize
+text_action => "That's true"
+action_perform
+sleep => 10
+close
+```
+
+#### Perform
+Perhaps the simplest to use yet the most important in the entire action chain section is this one because it makes you be able to perform actions when youare done linking them up and it's used something like what follows
+
+```action_perform```
+
 ## Wait
 In the process of testing you may want to wait for certain things to happen, even though going to website by either clicking or visiting through the methods alredy does so but, you now can wait by sleeping, meaning using sleep method.
 
@@ -108,7 +132,7 @@ thanks, for reading through and we'll hope you'll continue to use BA-Test.
 Wait, were you a developer looking for a test writing DSL for your testers or business people to use and for you to extend we got you. This language has a file named `extensions.py` where you can write methods and they will be directly accessible in this language and what follows is a plethora of things you would need to know before you can start extending this DSL to meet your needs.
 
 ## Global variables
-There are a few global variables used as memory for BA-Test, the first one is **driver** which is the driver we want to use for browser automation, the second one is **elements** which ofcourse is the memory used to store elements, and the last one is **variables** which is the memory we use to store variables being set by users.
+There are a few global variables used as memory for BA-Test, the first one is **driver** which is the driver we want to use for browser automation, **ActionChain** which is initialized by action_initialize and is responsible for all actions in action chain, the second one is **elements** which ofcourse is the memory used to store elements, and the last one is **variables** which is the memory we use to store variables being set by users.
 
 ## findElement
 You would have to use this function to find an element and whenever you'd have to find an element from global element you must have an element and an index argument which by default should be `None`, and what follows is an example extension of this file where I make another function to click a button.
