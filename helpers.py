@@ -138,7 +138,7 @@ def write(element, words, index=None, clear="True", enter="True"):
 def click(element, index=None):
     findElement(element, index).click()
 
-def click(window_name):
+def switch_to(window_name):
     driver.switch_to_window(window_name)
 
 def visit(*args):
