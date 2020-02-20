@@ -72,6 +72,11 @@ Perhaps the simplest to use yet the most important in the entire action chain se
 
 ```action_perform```
 
+## Switching between windows
+In web applications, it's common to have multiple windows and in order to switch between them you should use `switch_to`, and in order  to do that you must be able to provide the name of the window as an argument to this command. Following is a way of using this command.
+
+```switch_to => myWin```
+
 ## Wait
 In the process of testing you may want to wait for certain things to happen, even though going to website by either clicking or visiting through the methods alredy does so but, you now can wait by sleeping, meaning using sleep method.
 
