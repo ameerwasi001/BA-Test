@@ -82,9 +82,13 @@ if sys.argv[1].startswith('help'):
     get_help()
 else:
     with open(sys.argv[1], 'r') as file:
-        for line in file:
-            line = line.strip()
+        line_no = 0
+        file = file.read()
+        lines = file.split("\n")
+        while line_no<len(lines):
+            line = lines[line_no].strip()
             if not line or line[0] == '#':
+                line_no += 1
                 continue
             parts = line.split()
             parts = re.split('=>|,', line)
@@ -100,3 +104,4 @@ else:
 
             print(kwargs, '/', args)
             getattr(helpers, parts[0])(*args, **kwargs)
+            line_no += 1
