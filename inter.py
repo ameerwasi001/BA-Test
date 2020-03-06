@@ -28,9 +28,7 @@ def remove_space_or_not(part):
     while part.endswith(' '):
         part = part[:-1]
     if (part.startswith('"') and part.endswith('"')) or (part.startswith("'") and part.endswith("'")):
-        print(part)
         part = part[1:-1]
-        print(part)
     else:
         part = part.replace(" ", '')
     return part
@@ -100,8 +98,21 @@ else:
             parts = [x for x in parts if not x == 'GET']
             parts = [x for x in parts if not x == 'EVALUATE']
             seprationOperator = '=' if parts[0] == 'SET' else '->'
+            ifstatement = True
             args, kwargs = get_args(parts[1:], shouldEqualBeSeprated=True, seprationOperator=seprationOperator)
-
+            if len(args)>1:
+                if (parts[0] == "IF") and (args[1] == "THEN"):
+                    try:
+                        ifstatement = ((args[0] == 'True') or (args[0] == True) or (int(args[0]) > 0))
+                    except ValueError:
+                        ifstatement = ((args[0] == 'True') or (args[0] == True))
+                    for x in range(3):
+                        args.pop(0)
+                        parts.pop(0)
             print(kwargs, '/', args)
-            getattr(helpers, parts[0])(*args, **kwargs)
+            if ifstatement:
+                if parts[0] == "GOTO":
+                    line_no = int(parts[1])-2
+                else:
+                    getattr(helpers, parts[0])(*args, **kwargs)
             line_no += 1
