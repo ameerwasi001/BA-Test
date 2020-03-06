@@ -53,13 +53,15 @@ def EVALUATE(evaluation):
         arreval[i] = str(arreval[i]).replace('get>', "variables['")
         if arreval[i].startswith('variables'):
             arreval[i] = str(arreval[i])+"']"
-            arreval[i] = eval(arreval[i], globals(), locals())
         for i, a in enumerate(arreval):
             try:
-                arreval[i] = int(arreval[i])
+                arreval[i] = float(arreval[i])
             except:
                 arreval[i] = arreval[i]
     return eval(''.join([str(a) for a in arreval]))
+
+def Print(*values):
+    print(*values)
 
 def start(browser, path='/'):
     global driver
