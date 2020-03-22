@@ -6,147 +6,136 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 import time
 
-driver = None
-ActionChain = None
-elements = {}
-variables = {}
 
-def findElement(element, index):
-    return elements[element] if index is None else elements[element][int(index)]
+class HelpCycle:
+    def __init__(self):
+        self.driver = None
+        self.ActionChain = None
+        self.elements = {}
+        self.variables = {}
 
-def listOrNot(index):
-    global elements
-    if isinstance(elements[index], list) and len(elements[index]) == 1:
-        elements[index] = elements[index][0]
-    elif isinstance(elements[index], list) and len(elements[index]) == 0:
-        raise KeyError ("No element with matching attributes found")
+    def findElement(self, element, index):
+        return self.elements[element] if index is None else self.elements[element][int(index)]
 
-def str2bool(v):
-  return v.lower() in ("yes", "true", "t", "1")
+    def listOrNot(self, index):
+        if isinstance(self.elements[index], list) and len(self.elements[index]) == 1:
+            self.elements[index] = self.elements[index][0]
+        elif isinstance(self.elements[index], list) and len(self.elements[index]) == 0:
+            raise KeyError ("No element with matching attributes found")
 
-def sleep(wait):
-    time.sleep(int(wait))
+    def str2bool(self, v):
+      return v.lower() in ("yes", "true", "t", "1")
 
-def SET(typeVar, **kwargs):
-    global variables
-    for k, v in kwargs.items():
-        if typeVar == 'float':
-            variables[k] = float(v)
-        elif typeVar == 'str':
-            variables[k] = str(v)
-        elif typeVar == 'int':
-            variables[k] = int(v)
-        else:
-            raise AttributeError ("Given type is unsupported")
-    print(variables)
+    def sleep(self, wait):
+        time.sleep(int(wait))
 
-def GET(variable):
-    return variables[variable]
+    def SET(self, typeVar, **kwargs):
+        for k, v in kwargs.items():
+            if typeVar == 'float':
+                self.variables[k] = float(v)
+            elif typeVar == 'str':
+                self.variables[k] = str(v)
+            elif typeVar == 'int':
+                self.variables[k] = int(v)
+            else:
+                raise AttributeError ("Given type is unsupported")
+        print(self.variables)
 
-def EVALUATE(evaluation):
-    print(evaluation)
-    #evaluation = evaluation.replace(' ', '')
-    #evaluation = evaluation.replace('get>', 'variables[')
-    arreval = re.split('(\(|\)|\+|\-|\*|\/)', evaluation)
-    for i, a in enumerate(arreval):
-        print(arreval[i])
-        arreval[i] = str(arreval[i]).replace('get>', "variables['")
-        if arreval[i].startswith('variables'):
-            arreval[i] = str(arreval[i])+"']"
+    def GET(self, variable):
+        return self.variables[variable]
+
+    def EVALUATE(self, evaluation):
+        print(evaluation)
+        #evaluation = evaluation.replace(' ', '')
+        #evaluation = evaluation.replace('get>', 'self.variables[')
+        arreval = re.split('(\(|\)|\+|\-|\*|\/)', evaluation)
         for i, a in enumerate(arreval):
-            try:
-                arreval[i] = float(arreval[i])
-            except:
-                arreval[i] = arreval[i]
-    return eval(''.join([str(a) for a in arreval]))
+            print(arreval[i])
+            arreval[i] = str(arreval[i]).replace('get>', "self.variables['")
+            if arreval[i].startswith('self.variables'):
+                arreval[i] = str(arreval[i])+"']"
+            for i, a in enumerate(arreval):
+                try:
+                    arreval[i] = float(arreval[i])
+                except:
+                    arreval[i] = arreval[i]
+        return eval(''.join([str(a) for a in arreval]))
 
-def Print(*values):
-    print(*values)
+    def Print(self, *values):
+        print(*values)
 
-def start(browser, path='/'):
-    global driver
-    if browser.upper() == 'CHROME':
-        driver = webdriver.Chrome(path)
-    elif browser.upper() == 'FIREFOX':
-        driver = webdriver.Firefox(path)
-    elif browser.upper() == 'EDGE':
-        driver = webdriver.Edge(path)
-    elif browser.upper() == 'SAFARI':
-        driver = webdriver.Safari(path)
+    def start(self, browser, path='/'):
+        if browser.upper() == 'CHROME':
+            self.driver = webdriver.Chrome(path)
+        elif browser.upper() == 'FIREFOX':
+            self.driver = webdriver.Firefox(path)
+        elif browser.upper() == 'EDGE':
+            self.driver = webdriver.Edge(path)
+        elif browser.upper() == 'SAFARI':
+            self.driver = webdriver.Safari(path)
 
-def get_element_by_name(name, index):
-    global elements
-    elements[index] = driver.find_elements_by_name(name)
-    listOrNot(index)
+    def get_element_by_name(self, name, index):
+        self.elements[index] = self.driver.find_elements_by_name(name)
+        self.listOrNot(index)
 
-def get_element_by_class(class_name, index):
-    global elements
-    elements[index] = driver.find_elements_by_class_name(class_name)
-    listOrNot(index)
+    def get_element_by_class(self, class_name, index):
+        self.elements[index] = self.driver.find_elements_by_class_name(class_name)
+        self.listOrNot(index)
 
-def action_initialize():
-    global ActionChain
-    ActionChain = ActionChains(driver)
+    def action_initialize(self):
+        self.ActionChain = ActionChains(self.driver)
 
-def text_action(*text_args, enter="True"):
-    ActionChain.send_keys(*text_args)
-    if str2bool(enter):
-        ActionChain.send_keys(Keys.ENTER)
+    def text_action(self, *text_args, enter="True"):
+        self.ActionChain.send_keys(*text_args)
+        if self.str2bool(enter):
+            self.ActionChain.send_keys(Keys.ENTER)
 
-def action_perform():
-    global ActionChain
-    ActionChain.perform()
+    def action_perform(self):
+        self.ActionChain.perform()
 
-def get_element_by_id(elem_id, index):
-    global elements
-    elements[index] = driver.find_elements_by_id(elem_id)
-    listOrNot(index)
+    def get_element_by_id(self, elem_id, index):
+        self.elements[index] = self.driver.find_elements_by_id(elem_id)
+        self.listOrNot(index)
 
-def get_element_by_xpath(xpath, index):
-    global elements
-    elements[index] = driver.find_elements_by_xpath(xpath)
-    listOrNot(index)
+    def get_element_by_xpath(self, xpath, index):
+        self.elements[index] = self.driver.find_elements_by_xpath(xpath)
+        self.listOrNot(index)
 
-def get_element_by_css_selector(selector, index):
-    global elements
-    elements[index] = driver.find_element_by_css_selector(selector)
-    listOrNot(index)
+    def get_element_by_css_selector(self, selector, index):
+        self.elements[index] = self.driver.find_element_by_css_selector(selector)
+        self.listOrNot(index)
 
-def get_element_by_tag(tag, index):
-    global elements
-    elements[index] = driver.find_elements_by_tag_name(tag)
-    listOrNot(index)
+    def get_element_by_tag(self, tag, index):
+        self.elements[index] = self.driver.find_elements_by_tag_name(tag)
+        self.listOrNot(index)
 
-def get_element_by_link_text(mode, text, index):
-    global elements
-    if mode.lower() == "absolute":
-        elements[index] = driver.find_elements_by_link_text(text)
-    elif mode.lower() == "partial":
-        elements[index] = driver.find_elements_by_partial_link_text(text)
-    else:
-        raise TypeError (f"undefined type {mode}")
-    listOrNot(index)
+    def get_element_by_link_text(self, mode, text, index):
+        if mode.lower() == "absolute":
+            self.elements[index] = self.driver.find_elements_by_link_text(text)
+        elif mode.lower() == "partial":
+            self.elements[index] = self.driver.find_elements_by_partial_link_text(text)
+        else:
+            raise TypeError (f"undefined type {mode}")
+        self.listOrNot(index)
 
-def clear(element, index):
-    findElement(element, index).clear()
+    def clear(self, element, index):
+        self.findElement(element, index).clear()
 
-def write(element, words, index=None, clear="True", enter="True"):
-    if str2bool(clear):
-        findElement(element, index).clear()
-    findElement(element, index).send_keys(words)
-    if str2bool(enter):
-        findElement(element, index).send_keys(Keys.RETURN)
+    def write(self, element, words, index=None, clear="True", enter="True"):
+        if self.str2bool(clear):
+            self.findElement(element, index).clear()
+        self.findElement(element, index).send_keys(words)
+        if self.str2bool(enter):
+            self.findElement(element, index).send_keys(Keys.RETURN)
 
-def click(element, index=None):
-    findElement(element, index).click()
+    def click(self, element, index=None):
+        self.findElement(element, index).click()
 
-def switch_to(window_name):
-    driver.switch_to_window(window_name)
+    def switch_to(self, window_name):
+        self.driver.switch_to_window(window_name)
 
-def visit(*args):
-    driver.get(*args)
+    def visit(self, *args):
+        self.driver.get(*args)
 
-def close():
-    driver.close()
-
-exec((open("extensions.py").read()), globals(), locals())
+    def close(self):
+        self.driver.close()
