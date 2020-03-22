@@ -1,1 +1,5 @@
-#You can write any additional python code here that you want to be accessible in BA-Test
+from helpers import HelpCycle
+
+class Extension(HelpCycle):
+    def __init__(self):
+        super().__init__()
