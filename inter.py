@@ -1,141 +1,120 @@
+import sys
+import os
+from extensions import Extension
 import re
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
-import time
+import importlib
 
+EXTENSION = Extension()
 
-class HelpCycle:
-    def __init__(self):
-        self.driver = None
-        self.ActionChain = None
-        self.elements = {}
-        self.variables = {}
+def get_the_getters(given_list, getter='GET'):
+    getters = [i for i, x in enumerate(given_list) if x == getter]
+    for g in getters:
+        print('getters: ', given_list[g], g, end=', ')
+    if getters != []:
+        for getter in getters:
+            getter_var = getter+1
+            getter_val = given_list[getter_var]
+            value = getattr(EXTENSION, given_list[getter])(given_list[getter_var])
+            print('value: ', value)
+            given_list[getter_var] = value
+            del given_list[getter]
+#            given_list = [value if given == getter_val else given for given in given_list]
+#            print('pt', given_list)
+            return given_list
+    else:
+        return given_list
 
-    def findElement(self, element, index):
-        return self.elements[element] if index is None else self.elements[element][int(index)]
+def remove_space_or_not(part):
+    while part.startswith(' '):
+        part = part[1:]
+    while part.endswith(' '):
+        part = part[:-1]
+    if (part.startswith('"') and part.endswith('"')) or (part.startswith("'") and part.endswith("'")):
+        part = part[1:-1]
+    else:
+        part = part.replace(" ", '')
+    return part
 
-    def listOrNot(self, index):
-        if isinstance(self.elements[index], list) and len(self.elements[index]) == 1:
-            self.elements[index] = self.elements[index][0]
-        elif isinstance(self.elements[index], list) and len(self.elements[index]) == 0:
-            raise KeyError ("No element with matching attributes found")
-
-    def str2bool(self, v):
-      return v.lower() in ("yes", "true", "t", "1")
-
-    def sleep(self, wait):
-        time.sleep(int(wait))
-
-    def SET(self, typeVar, **kwargs):
-        for k, v in kwargs.items():
-            if typeVar == 'float':
-                self.variables[k] = float(v)
-            elif typeVar == 'str':
-                self.variables[k] = str(v)
-            elif typeVar == 'int':
-                self.variables[k] = int(v)
-            else:
-                raise AttributeError ("Given type is unsupported")
-        print(self.variables)
-
-    def GET(self, variable):
-        return self.variables[variable]
-
-    def EVALUATE(self, evaluation):
-        print(evaluation)
-        #evaluation = evaluation.replace(' ', '')
-        #evaluation = evaluation.replace('get>', 'self.variables[')
-        arreval = re.split('(\(|\)|\+|\-|\*|\/)', evaluation)
-        for i, a in enumerate(arreval):
-            print(arreval[i])
-            arreval[i] = str(arreval[i]).replace('get>', "self.variables['")
-            if arreval[i].startswith('self.variables'):
-                arreval[i] = str(arreval[i])+"']"
-            for i, a in enumerate(arreval):
-                try:
-                    arreval[i] = float(arreval[i])
-                except:
-                    arreval[i] = arreval[i]
-        return eval(''.join([str(a) for a in arreval]))
-
-    def Print(self, *values):
-        print(*values)
-
-    def start(self, browser, path='/'):
-        if browser.upper() == 'CHROME':
-            self.driver = webdriver.Chrome(path)
-        elif browser.upper() == 'FIREFOX':
-            self.driver = webdriver.Firefox(path)
-        elif browser.upper() == 'EDGE':
-            self.driver = webdriver.Edge(path)
-        elif browser.upper() == 'SAFARI':
-            self.driver = webdriver.Safari(path)
-
-    def get_element_by_name(self, name, index):
-        self.elements[index] = self.driver.find_elements_by_name(name)
-        self.listOrNot(index)
-
-    def get_element_by_class(self, class_name, index):
-        self.elements[index] = self.driver.find_elements_by_class_name(class_name)
-        self.listOrNot(index)
-
-    def action_initialize(self):
-        self.ActionChain = ActionChains(self.driver)
-
-    def text_action(self, *text_args, enter="True"):
-        self.ActionChain.send_keys(*text_args)
-        if self.str2bool(enter):
-            self.ActionChain.send_keys(Keys.ENTER)
-
-    def action_perform(self):
-        self.ActionChain.perform()
-
-    def get_element_by_id(self, elem_id, index):
-        self.elements[index] = self.driver.find_elements_by_id(elem_id)
-        self.listOrNot(index)
-
-    def get_element_by_xpath(self, xpath, index):
-        self.elements[index] = self.driver.find_elements_by_xpath(xpath)
-        self.listOrNot(index)
-
-    def get_element_by_css_selector(self, selector, index):
-        self.elements[index] = self.driver.find_element_by_css_selector(selector)
-        self.listOrNot(index)
-
-    def get_element_by_tag(self, tag, index):
-        self.elements[index] = self.driver.find_elements_by_tag_name(tag)
-        self.listOrNot(index)
-
-    def get_element_by_link_text(self, mode, text, index):
-        if mode.lower() == "absolute":
-            self.elements[index] = self.driver.find_elements_by_link_text(text)
-        elif mode.lower() == "partial":
-            self.elements[index] = self.driver.find_elements_by_partial_link_text(text)
+def get_args(dsl_args, shouldEqualBeSeprated=True, seprationOperator='->'):
+    """return args, kwargs"""
+    args = []
+    kwargs = {}
+    for index, dsl_arg in enumerate(dsl_args):
+        if str(dsl_arg).__contains__('GET'):
+            getter = 'GET'
+        elif str(dsl_arg).__contains__('EVALUATE'):
+            getter = 'EVALUATE'
+    
+        if str(dsl_arg).__contains__("GET") or str(dsl_arg).__contains__('EVALUATE'):
+            k, v = dsl_arg.split(seprationOperator, 1)
+            k = remove_space_or_not(k)
+            v = remove_space_or_not(v)
+            kwargs[k] = getattr(EXTENSION, getter)(dsl_args[index+1])
+            del dsl_args[index+1]
         else:
-            raise TypeError (f"undefined type {mode}")
-        self.listOrNot(index)
+            if seprationOperator in str(dsl_arg) and shouldEqualBeSeprated:
+                k, v = dsl_arg.split(seprationOperator, 1)
+                kwargs[remove_space_or_not(k)] = remove_space_or_not(v)
+            else:
+                args.append(dsl_arg)
+    return args, kwargs
 
-    def clear(self, element, index):
-        self.findElement(element, index).clear()
+def get_help():
+    print(
+        """
+Hello there! this is an opensource DSL for browser automation made for testers who want a simple interface for testing web applications. It calls functions from from helpers file and to know what those functions exactly are, you may visit the documentation of this language at Github,to assign parameters to a function you use '=>' and to assign parameters with names you use something like 'enter->false' and all paramenetersmust be seprated by ','. Thanks for reading along and to to know the exact syntax with examples, you should visit our GitHub because we do have some documentation there.\n...Were you a developer, thinking this might help in providing your testers with an easier to use interface, then it's for you too because you can write your own python functions in 'extensions.py' and they will be directly accessible in this language"""
+        )
 
-    def write(self, element, words, index=None, clear="True", enter="True"):
-        if self.str2bool(clear):
-            self.findElement(element, index).clear()
-        self.findElement(element, index).send_keys(words)
-        if self.str2bool(enter):
-            self.findElement(element, index).send_keys(Keys.RETURN)
+if len(sys.argv) != 2:
+    print('usage 1: %s <src.dsl>' % sys.argv[0])
+    print('usage 2: %s help=<module name>' % sys.argv[0])
+    sys.exit(1)
 
-    def click(self, element, index=None):
-        self.findElement(element, index).click()
+def getModules(path):
+    path=os.path.dirname(os.path.abspath(path))
+    path=path.replace('\\', '/')
+    print(path)
+    return path
 
-    def switch_to(self, window_name):
-        self.driver.switch_to_window(window_name)
+sys.path.insert(0, getModules(sys.argv[1]))
 
-    def visit(self, *args):
-        self.driver.get(*args)
-
-    def close(self):
-        self.driver.close()
+if sys.argv[1].startswith('help'):
+    get_help()
+else:
+    with open(sys.argv[1], 'r') as file:
+        line_no = 0
+        file = file.read()
+        lines = file.split("\n")
+        while line_no<len(lines):
+            line = lines[line_no].strip()
+            if not line or line[0] == '#':
+                line_no += 1
+                continue
+            parts = line.split()
+            parts = re.split('=>|,', line)
+            for index, part in enumerate(parts):
+                if not part.__contains__('=' if parts[0] == 'SET' else '->'):
+                    parts[index] = remove_space_or_not(part)
+            parts = get_the_getters(parts, getter='GET')
+            parts = get_the_getters(parts, getter='EVALUATE')
+            parts = [x for x in parts if not x == 'GET']
+            parts = [x for x in parts if not x == 'EVALUATE']
+            seprationOperator = '=' if parts[0] == 'SET' else '->'
+            ifstatement = True
+            args, kwargs = get_args(parts[1:], shouldEqualBeSeprated=True, seprationOperator=seprationOperator)
+            if len(args)>1:
+                if (parts[0] == "IF") and (args[1] == "THEN"):
+                    try:
+                        ifstatement = ((args[0] == 'True') or (args[0] == True) or (int(args[0]) > 0))
+                    except ValueError:
+                        ifstatement = ((args[0] == 'True') or (args[0] == True))
+                    for x in range(3):
+                        args.pop(0)
+                        parts.pop(0)
+            print(kwargs, '/', args)
+            if ifstatement:
+                if parts[0] == "GOTO":
+                    line_no = int(parts[1])-2
+                else:
+                    getattr(EXTENSION, parts[0])(*args, **kwargs)
+            line_no += 1
