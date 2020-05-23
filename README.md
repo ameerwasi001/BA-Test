@@ -1,5 +1,5 @@
 # Browser Automation-Test
-This is an extensible DSL made with selenium and python for browser automation test writing with very simple and elegant syntax.
+This is an extensible DSL made with selenium and python for browser automation test writing with very simple and elegant syntax. It has been deprecated in favour of it's successor [BWTest](https://github.com/ameerwasi001/BWTest)
 
 # Supported Browsers
 It supports every browser that selenium supports meaning Firefox, Chrome, Safari, Edge and Internet Explorer 3 and drivers for all of them will be required.
